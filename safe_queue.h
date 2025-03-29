@@ -23,12 +23,12 @@ public:
     void push(const T& new_value){
         std::lock_guard<std::mutex> lock(m);
         data.push(std::move(new_value));
-        data_cond.notify_one();
+        data_cond.notify_all();
     }
     void push(T&& new_value){
         std::lock_guard<std::mutex> lock(m);
         data.push(std::move(new_value));
-        data_cond.notify_one();
+        data_cond.notify_all();
     }
     std::shared_ptr<T> pop(){
        std::unique_lock<std::mutex> lk(m);
