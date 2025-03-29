@@ -3,6 +3,7 @@
 thread_pool::thread_pool()
 {
     unsigned const thread_count=std::thread::hardware_concurrency();
+    // std::cout << thread_count << std::endl;
     try
     {
         for(unsigned i=0;i<thread_count;++i)
@@ -15,9 +16,5 @@ thread_pool::thread_pool()
     {
         throw;
     }
-    for(unsigned long i=0;i<thrvec.size();++i)
-    {
-        if(thrvec[i].joinable())
-            thrvec[i].join();
-    }
+
 }

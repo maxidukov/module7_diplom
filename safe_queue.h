@@ -5,6 +5,7 @@
 #include <mutex>
 #include <queue>
 #include <condition_variable>
+#include <functional>
 
 template<typename T>
 class safe_queue
@@ -30,17 +31,15 @@ public:
         data_cond.notify_one();
     }
     std::shared_ptr<T> pop(){
-        std::lock_guard<std::mutex> lock(m);
-        data_cond.wait(m,[this]{return !data.empty();});
-        // if(data.empty()) throw empty_stack();
+       std::unique_lock<std::mutex> lk(m);
+        data_cond.wait(lk,[this]{return !data.empty();});
         std::shared_ptr<T> const res(std::make_shared<T>(data.front()));
         data.pop();
         return res;
     }
     void pop(T& value){
-        std::lock_guard<std::mutex> lock(m);
-        data_cond.wait(m,[this]{return !data.empty();});
-        // if(data.empty()) throw empty_stack();
+        std::unique_lock<std::mutex> lk(m);
+        data_cond.wait(lk,[this]{return !data.empty();});
         value=data.front();
         data.pop();
     }
