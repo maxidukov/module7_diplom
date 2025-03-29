@@ -10,8 +10,8 @@ int main()
 {
     thread_pool thrp;
 
-    thrp.submit(f1);
-    thrp.submit(f2);
+    // thrp.submit(f1);
+    // thrp.submit(f2);
 
     for (int i = 0; i < 5; ++i) {
         thrp.submit(f1);
