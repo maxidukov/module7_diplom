@@ -17,7 +17,7 @@ int main()
         thrp.submit(f1);
         thrp.submit(f2);
         this_thread::sleep_for(
-                chrono::seconds(2));
+                chrono::seconds(1));
     }
 
     return 0;
