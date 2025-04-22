@@ -30,7 +30,7 @@ public:
         data.push(std::move(new_value));
         data_cond.notify_all();
     }
-    std::shared_ptr<T> pop(){
+    std::shared_ptr<T> pop(){ //NOT USED HERE
        std::unique_lock<std::mutex> lk(m);
         data_cond.wait(lk,[this]{return !data.empty();});
         std::shared_ptr<T> const res(std::make_shared<T>(data.front()));
@@ -42,6 +42,15 @@ public:
         data_cond.wait(lk,[this]{return !data.empty();});
         value=data.front();
         data.pop();
+    }
+    bool try_pop(T& value){
+        std::unique_lock<std::mutex> lk(m);
+        //data_cond.wait_for(lk,std::chrono::seconds(30),[this]{return !data.empty();});
+        data_cond.wait(lk,[this]{return !data.empty();});
+        if(data.empty()){ return false;}
+        value=data.front();
+        data.pop();
+        return true;
     }
     bool empty() const{
         std::lock_guard<std::mutex> lock(m);

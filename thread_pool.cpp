@@ -20,31 +20,30 @@ thread_pool::thread_pool()
 }
 
 thread_pool::~thread_pool(){
-    // {
-    //     std::unique_lock<std::mutex> lock(queue_mutex);
-    //     // stop_ = true;
-    // }
+    stop_ = true;
     for(unsigned long i=0;i<thrvec.size();++i)
     {
         if(thrvec[i].joinable())
             thrvec[i].join();
     }
-    std::cout << "Jobs done" << std::endl; //WARNING: MAY NEVER RUN IF MORE THREADS THAN JOBS, IDLE THREADS WILL WAIT FOR COND VAR TO NOTIFY THEM FOR EVER
+    //std::cout << "All jobs done" << std::endl; //WARNING: MAY NEVER RUN IF MORE THREADS THAN JOBS AND NO NEW JOBD ARE COMING, IDLE THREADS WILL WAIT FOR COND VAR TO NOTIFY THEM FOR EVER
 }
 
 void thread_pool::work()
 {
-    // while(!stop_)
-    // {
+    while(!stop_)
+    {
     std::function<void()> task;
     try
     {
         task_queue.pop(task);
+
     }
     catch(...)
     {
+        //stop_ = true;
         std::this_thread::yield();
     }
     task();
-    // }
+    }
 }

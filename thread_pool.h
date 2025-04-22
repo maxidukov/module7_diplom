@@ -11,8 +11,8 @@ class thread_pool
 {
     std::vector<std::thread> thrvec;
     safe_queue<std::function<void()>> task_queue;
-    // std::mutex queue_mutex;
-    // bool stop_ = false;
+    std::mutex pool_mutex; //ONLY FOR OUTPUTTING CERTAIN MESSAGES
+    bool stop_ = false;
     void work();
 public:
     thread_pool();
